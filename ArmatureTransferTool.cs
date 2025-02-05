@@ -1,13 +1,14 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 
 public class ArmatureTransferTool : EditorWindow
 {
-    // ƒ{[ƒ“‚ÌTransformî•ñ‚ğˆê•Û‘¶‚·‚é«‘
+    // ãƒœãƒ¼ãƒ³ã®Transformæƒ…å ±ã‚’ä¸€æ™‚ä¿å­˜ã™ã‚‹è¾æ›¸
     private Dictionary<string, TransformData> recordedBones = new Dictionary<string, TransformData>();
 
-    // ƒ†[ƒU[‚ªİ’è‚·‚éƒIƒuƒWƒFƒNƒg
+    // ãƒ¦ãƒ¼ã‚¶ãƒ¼ãŒè¨­å®šã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
     private GameObject sourceObject;
     private GameObject targetObject;
 
@@ -21,17 +22,17 @@ public class ArmatureTransferTool : EditorWindow
     {
         GUILayout.Label("Armature Transfer Tool", EditorStyles.boldLabel);
 
-        // Source ‚Æ Target ‚ÌƒIƒuƒWƒFƒNƒg‚ğİ’è
+        // Source ã¨ Target ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¨­å®š
         sourceObject = (GameObject)EditorGUILayout.ObjectField("Source Object", sourceObject, typeof(GameObject), true);
         targetObject = (GameObject)EditorGUILayout.ObjectField("Target Object", targetObject, typeof(GameObject), true);
 
-        // Armature‚ÌTransform‚ğ‹L˜^
+        // Armatureã®Transformã‚’è¨˜éŒ²
         if (GUILayout.Button("Record Armature Transforms"))
         {
             RecordArmatureTransforms();
         }
 
-        // ‹L˜^‚µ‚½Transform‚ğTarget‚É“K—p
+        // è¨˜éŒ²ã—ãŸTransformã‚’Targetã«é©ç”¨
         if (GUILayout.Button("Transfer Transforms"))
         {
             TransferTransforms();
@@ -39,8 +40,8 @@ public class ArmatureTransferTool : EditorWindow
     }
 
     /// <summary>
-    /// SourceƒIƒuƒWƒFƒNƒg“à‚ÌArmature‚ğŒŸõ‚µA‚»‚Ì”z‰º‚Ìƒ{[ƒ“‚ÌTransform‚ğ‹L˜^‚·‚é
-    /// ‚½‚¾‚µAe‚Æ“¯‚¶–¼‘O‚Ìƒ{[ƒ“‚Í‹L˜^‘ÎÛŠO
+    /// Sourceã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå†…ã®Armatureã‚’æ¤œç´¢ã—ã€ãã®é…ä¸‹ã®ãƒœãƒ¼ãƒ³ã®Transformã‚’è¨˜éŒ²ã™ã‚‹
+    /// ãŸã ã—ã€è¦ªã¨åŒã˜åå‰ã®ãƒœãƒ¼ãƒ³ã¯è¨˜éŒ²å¯¾è±¡å¤–
     /// </summary>
     private void RecordArmatureTransforms()
     {
@@ -50,9 +51,9 @@ public class ArmatureTransferTool : EditorWindow
             return;
         }
 
-        recordedBones.Clear(); // ‹L˜^‚ğƒŠƒZƒbƒg
+        recordedBones.Clear(); // è¨˜éŒ²ã‚’ãƒªã‚»ãƒƒãƒˆ
 
-        // Source ‚Ì Armature ‚ğ’T‚·
+        // Source ã® Armature ã‚’æ¢ã™
         Transform sourceArmature = FindArmature(sourceObject);
         if (sourceArmature == null)
         {
@@ -60,10 +61,10 @@ public class ArmatureTransferTool : EditorWindow
             return;
         }
 
-        // Armature‚Ì’¼‰º‚É‚ ‚éƒ{[ƒ“‚ğ‹L˜^ie‚Æ“¯–¼‚Ì‚à‚Ì‚ÍœŠOj
+        // Armatureã®ç›´ä¸‹ã«ã‚ã‚‹ãƒœãƒ¼ãƒ³ã‚’è¨˜éŒ²ï¼ˆè¦ªã¨åŒåã®ã‚‚ã®ã¯é™¤å¤–ï¼‰
         foreach (Transform bone in sourceArmature.GetComponentsInChildren<Transform>())
         {
-            if (!IsInvalidBone(bone)) // œŠOğŒ‚ğ–‚½‚³‚È‚¢ê‡‚Ì‚İ‹L˜^
+            if (!IsInvalidBone(bone)) // é™¤å¤–æ¡ä»¶ã‚’æº€ãŸã•ãªã„å ´åˆã®ã¿è¨˜éŒ²
             {
                 recordedBones[bone.name] = new TransformData(bone);
             }
@@ -73,7 +74,7 @@ public class ArmatureTransferTool : EditorWindow
     }
 
     /// <summary>
-    /// ‹L˜^‚µ‚½Transform‚ğTargetƒIƒuƒWƒFƒNƒg“à‚Ì“¯–¼ƒ{[ƒ“‚É“K—p‚·‚é
+    /// è¨˜éŒ²ã—ãŸTransformã‚’Targetã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå†…ã®åŒåãƒœãƒ¼ãƒ³ã«é©ç”¨ã™ã‚‹
     /// </summary>
     private void TransferTransforms()
     {
@@ -89,7 +90,7 @@ public class ArmatureTransferTool : EditorWindow
             return;
         }
 
-        // Target ‚Ì Armature ‚ğ’T‚·
+        // Target ã® Armature ã‚’æ¢ã™
         Transform targetArmature = FindArmature(targetObject);
         if (targetArmature == null)
         {
@@ -97,15 +98,15 @@ public class ArmatureTransferTool : EditorWindow
             return;
         }
 
-        // •ÏX‚ğUndo‚Å‚«‚é‚æ‚¤‚É“o˜^
+        // å¤‰æ›´ã‚’Undoã§ãã‚‹ã‚ˆã†ã«ç™»éŒ²
         Undo.RegisterCompleteObjectUndo(targetObject, "Transfer Armature Transforms");
 
-        // Target“à‚Ìƒ{[ƒ“‚ğŒŸõ‚µA‹L˜^ƒf[ƒ^‚ª‚ ‚éê‡‚Ì‚İ“K—p
+        // Targetå†…ã®ãƒœãƒ¼ãƒ³ã‚’æ¤œç´¢ã—ã€è¨˜éŒ²ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚‹å ´åˆã®ã¿é©ç”¨
         foreach (Transform bone in targetArmature.GetComponentsInChildren<Transform>())
         {
-            if (recordedBones.ContainsKey(bone.name) && !IsInvalidBone(bone)) // ‹L˜^Ï‚İ‚ÅAœŠOğŒ‚ğ–‚½‚³‚È‚¢ê‡
+            if (recordedBones.ContainsKey(bone.name) && !IsInvalidBone(bone)) // è¨˜éŒ²æ¸ˆã¿ã§ã€é™¤å¤–æ¡ä»¶ã‚’æº€ãŸã•ãªã„å ´åˆ
             {
-                Undo.RecordObject(bone, "Transform Change"); // ŒÂ•Ê‚ÌUndo‚ğ‹L˜^
+                Undo.RecordObject(bone, "Transform Change"); // å€‹åˆ¥ã®Undoã‚’è¨˜éŒ²
                 TransformData data = recordedBones[bone.name];
                 bone.localPosition = data.localPosition;
                 bone.localRotation = data.localRotation;
@@ -117,39 +118,39 @@ public class ArmatureTransferTool : EditorWindow
     }
 
     /// <summary>
-    /// w’è‚³‚ê‚½ƒIƒuƒWƒFƒNƒg“à‚Ì"Armature"‚ğ’T‚µ‚Ä•Ô‚·
+    /// æŒ‡å®šã•ã‚ŒãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå†…ã®"Armature"ã‚’æ¢ã—ã¦è¿”ã™
     /// </summary>
     private Transform FindArmature(GameObject obj)
     {
         foreach (Transform child in obj.transform.GetComponentsInChildren<Transform>())
         {
-            if (child.name.ToLower() == "armature") // –¼‘O‚ª "Armature" ‚Éˆê’v‚·‚éê‡
+            if (child.name.ToLower() == "armature") // åå‰ãŒ "Armature" ã«ä¸€è‡´ã™ã‚‹å ´åˆ
             {
                 return child;
             }
         }
-        return null; // Œ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡
+        return null; // è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸå ´åˆ
     }
 
     /// <summary>
-    /// ƒ{[ƒ“‚ªe‚Æ“¯‚¶–¼‘O‚ğ‚Âê‡Aˆ—‘ÎÛŠO‚Æ‚·‚é
-    /// —á: "Hips"‚Ì‰º‚É‚ ‚é"Hips" ‚È‚Ç
+    /// ãƒœãƒ¼ãƒ³ãŒè¦ªã¨åŒã˜åå‰ã‚’æŒã¤å ´åˆã€å‡¦ç†å¯¾è±¡å¤–ã¨ã™ã‚‹
+    /// ä¾‹: "Hips"ã®ä¸‹ã«ã‚ã‚‹"Hips" ãªã©
     /// </summary>
     private bool IsInvalidBone(Transform bone)
     {
-        if (bone.parent == null) return false; // ƒ‹[ƒgƒIƒuƒWƒFƒNƒg‚È‚çOK
+        if (bone.parent == null) return false; // ãƒ«ãƒ¼ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãªã‚‰OK
 
         Transform parent = bone.parent;
         while (parent != null)
         {
-            if (bone.name == parent.name) return true; // e‚Æ“¯‚¶–¼‘O‚È‚çœŠO
+            if (bone.name == parent.name) return true; // è¦ªã¨åŒã˜åå‰ãªã‚‰é™¤å¤–
             parent = parent.parent;
         }
-        return false; // –â‘è‚È‚¢ê‡‚Í‘ÎÛ‚ÉŠÜ‚ß‚é
+        return false; // å•é¡Œãªã„å ´åˆã¯å¯¾è±¡ã«å«ã‚ã‚‹
     }
 
     /// <summary>
-    /// ƒ{[ƒ“‚ÌTransformƒf[ƒ^‚ğŠi”[‚·‚éƒNƒ‰ƒX
+    /// ãƒœãƒ¼ãƒ³ã®Transformãƒ‡ãƒ¼ã‚¿ã‚’æ ¼ç´ã™ã‚‹ã‚¯ãƒ©ã‚¹
     /// </summary>
     private class TransformData
     {
@@ -165,3 +166,4 @@ public class ArmatureTransferTool : EditorWindow
         }
     }
 }
+#endif
